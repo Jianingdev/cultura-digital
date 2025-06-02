@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Científico Educativo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0e1a;
+            --secondary-bg: #1a2332;
+            --accent-color: #00d4aa;
+            --accent-dark: #008b73;
+            --text-primary: #ffffff;
+            --text-secondary: #b8c5d6;
+            --card-bg: #1e2a3a;
+            --hover-bg: #2a3b4d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(26, 35, 50, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 212, 170, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(0, 212, 170, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-color);
+            background: rgba(0, 212, 170, 0.1);
+            transform: translateY(-2px);
+        }
+
+        main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: radial-gradient(circle at center, rgba(0, 212, 170, 0.1) 0%, transparent 70%);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--accent-color), #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 212, 170, 0.2);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 170, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .category-card:hover::before {
+            left: 100%;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 212, 170, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .category-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .category-card p {
+            color: var(--text-secondary);
+        }
+
+        .content-section {
+            display: none;
+            padding: 2rem 0;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .calculator {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 400px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .calc-display {
+            background: var(--primary-bg);
+            border: none;
+            color: var(--text-primary);
+            font-size: 2rem;
+            padding: 1rem;
+            text-align: right;
+            border-radius: 10px;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .calc-btn {
+            background: var(--secondary-bg);
+            border: none;
+            color: var(--text-primary);
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calc-btn:hover {
+            background: var(--hover-bg);
+            transform: scale(1.05);
+        }
+
+        .calc-btn.operator {
+            background: var(--accent-color);
+            color: var(--primary-bg);
+        }
+
+        .calc-btn.operator:hover {
+            background: var(--accent-dark);
+        }
+
+        .fact-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .fact-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .formula-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .formula {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .categories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">🧬 CienciaHub</div>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link active" data-section="home">Inicio</a></li>
+                <li><a href="#" class="nav-link" data-section="facts">Datos Curiosos</a></li>
+                <li><a href="#" class="nav-link" data-section="calculator">Calculadora</a></li>
+                <li><a href="#" class="nav-link" data-section="formulas">Fórmulas</a></li>
+                <li><a href="#" class="nav-link" data-section="experiments">Experimentos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Sección Inicio -->
+        <section id="home" class="content-section active">
+            <div class="hero">
+                <h1>Portal Científico Educativo</h1>
+                <p>Explora el fascinante mundo de la ciencia con datos curiosos, herramientas útiles y conocimiento educativo</p>
+            </div>
+
+            <div class="categories">
+                <div class="category-card" onclick="showSection('facts')">
+                    <div class="category-icon">🔬</div>
+                    <h3>Datos Curiosos</h3>
+                    <p>Descubre hechos fascinantes sobre ciencia, naturaleza y el universo que te sorprenderán</p>
+                </div>
+
+                <div class="category-card" onclick="showSection('calculator')">
+                    <div class="category-icon">🧮</div>
+                    <h3>Calculadora Científica</h3>
+                    <p>Herramienta de cálculo básica para resolver operaciones matemáticas</p>
+                </div>
+
+                <div class="category-card" onclick="showSection('formulas')">
+                    <div class="category-icon">📐</div>
+                    <h3>Fórmulas Científicas</h3>
+                    <p>Colección de fórmulas importantes en física, química y matemáticas</p>
+                </div>
+
+                <div class="category-card" onclick="showSection('experiments')">
+                    <div class="category-icon">⚗️</div>
+                    <h3>Experimentos</h3>
+                    <p>Experimentos caseros seguros y educativos para aprender ciencia</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Datos Curiosos -->
+        <section id="facts" class="content-section">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--accent-color);">Datos Curiosos Científicos</h2>
+            
+            <div class="fact-card">
+                <h4>🌟 Astronomía</h4>
+                <p>Una cucharadita de material de una estrella de neutrones pesaría aproximadamente 6 mil millones de toneladas en la Tierra.</p>
+            </div>
+
+            <div class="fact-card">
+                <h4>🧬 Biología</h4>
+                <p>Los humanos compartimos aproximadamente el 60% de nuestro ADN con los plátanos y el 99% con los chimpancés.</p>
+            </div>
+
+            <div class="fact-card">
+                <h4>⚡ Física</h4>
+                <p>La velocidad de la luz es de 299,792,458 metros por segundo, y nada puede viajar más rápido que ella en el vacío.</p>
+            </div>
+
+            <div class="fact-card">
+                <h4>🧪 Química</h4>
+                <p>El elemento más abundante en el universo es el hidrógeno (75%), seguido del helio (23%).</p>
+            </div>
+
+            <div class="fact-card">
+                <h4>🌍 Geología</h4>
+                <p>La Tierra tiene aproximadamente 4.54 mil millones de años, y la vida apareció hace unos 3.8 mil millones de años.</p>
+            </div>
+
+            <div class="fact-card">
+                <h4>🧠 Neurociencia</h4>
+                <p>El cerebro humano contiene aproximadamente 86 mil millones de neuronas, cada una conectada a miles de otras.</p>
+            </div>
+        </section>
+
+        <!-- Sección Calculadora -->
+        <section id="calculator" class="content-section">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--accent-color);">Calculadora Científica</h2>
+            
+            <div class="calculator">
+                <input type="text" class="calc-display" id="display" readonly>
+                <div class="calc-buttons">
+                    <button class="calc-btn" onclick="clearDisplay()">C</button>
+                    <button class="calc-btn" onclick="deleteLast()">⌫</button>
+                    <button class="calc-btn operator" onclick="appendOperator('/')">/</button>
+                    <button class="calc-btn operator" onclick="appendOperator('*')">×</button>
+                    
+                    <button class="calc-btn" onclick="appendNumber('7')">7</button>
+                    <button class="calc-btn" onclick="appendNumber('8')">8</button>
+                    <button class="calc-btn" onclick="appendNumber('9')">9</button>
+                    <button class="calc-btn operator" onclick="appendOperator('-')">-</button>
+                    
+                    <button class="calc-btn" onclick="appendNumber('4')">4</button>
+                    <button class="calc-btn" onclick="appendNumber('5')">5</button>
+                    <button class="calc-btn" onclick="appendNumber('6')">6</button>
+                    <button class="calc-btn operator" onclick="appendOperator('+')">+</button>
+                    
+                    <button class="calc-btn" onclick="appendNumber('1')">1</button>
+                    <button class="calc-btn" onclick="appendNumber('2')">2</button>
+                    <button class="calc-btn" onclick="appendNumber('3')">3</button>
+                    <button class="calc-btn operator" onclick="calculate()" style="grid-row: span 2;">=</button>
+                    
+                    <button class="calc-btn" onclick="appendNumber('0')" style="grid-column: span 2;">0</button>
+                    <button class="calc-btn" onclick="appendNumber('.')">.</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Fórmulas -->
+        <section id="formulas" class="content-section">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--accent-color);">Fórmulas Científicas Esenciales</h2>
+            
+            <div class="formula-card">
+                <h4>Ecuación de Einstein</h4>
+                <div class="formula">E = mc²</div>
+                <p>Energía = masa × velocidad de la luz al cuadrado</p>
+            </div>
+
+            <div class="formula-card">
+                <h4>Fuerza (Segunda Ley de Newton)</h4>
+                <div class="formula">F = ma</div>
+                <p>Fuerza = masa × aceleración</p>
+            </div>
+
+            <div class="formula-card">
+                <h4>Área del Círculo</h4>
+                <div class="formula">A = πr²</div>
+                <p>Área = π × radio al cuadrado</p>
+            </div>
+
+            <div class="formula-card">
+                <h4>Velocidad</h4>
+                <div class="formula">v = d/t</div>
+                <p>Velocidad = distancia / tiempo</p>
+            </div>
+
+            <div class="formula-card">
+                <h4>Teorema de Pitágoras</h4>
+                <div class="formula">a² + b² = c²</div>
+                <p>En un triángulo rectángulo: cateto² + cateto² = hipotenusa²</p>
+            </div>
+        </section>
+
+        <!-- Sección Experimentos -->
+        <section id="experiments" class="content-section">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--accent-color);">Experimentos Educativos</h2>
+            
+            <div class="fact-card">
+                <h4>🌋 Volcán de Bicarbonato</h4>
+                <p><strong>Materiales:</strong> Bicarbonato de sodio, vinagre, colorante rojo, detergente<br>
+                <strong>Procedimiento:</strong> Mezcla bicarbonato con un poco de detergente y colorante. Añade vinagre y observa la reacción efervescente.</p>
+            </div>
+
+            <div class="fact-card">
+                <h4>🔬 Cristales de Sal</h4>
+                <p><strong>Materiales:</strong> Sal, agua caliente, hilo, lápiz<br>
+                <strong>Procedimiento:</strong> Disuelve sal en agua caliente hasta saturación. Cuelga un hilo y espera varios días para ver crecer los cristales.</p>
+            </div>
+
+            <div class="fact-card">
+                <h4>🌈 Densidad de Líquidos</h4>
+                <p><strong>Materiales:</strong> Miel, agua, aceite, colorantes<br>
+                <strong>Procedimiento:</strong> Vierte cuidadosamente los líquidos en un vaso, comenzando por el más denso (miel) hasta el menos denso (aceite).</p>
+            </div>
+
+            <div class="fact-card">
+                <h4>⚡ Electricidad Estática</h4>
+                <p><strong>Materiales:</strong> Globo, cabello, papel picado<br>
+                <strong>Procedimiento:</strong> Frota el globo en tu cabello y acércalo a pequeños trozos de papel para ver cómo se atraen.</p>
+            </div>
+
+            <div class="fact-card">
+                <h4>🌱 Germinación de Semillas</h4>
+                <p><strong>Materiales:</strong> Frijoles, algodón, frasco de vidrio, agua<br>
+                <strong>Procedimiento:</strong> Coloca frijoles entre algodón húmedo en un frasco. Mantén húmedo y observa el crecimiento durante una semana.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Navegación
+        function showSection(sectionId) {
+            // Ocultar todas las secciones
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Actualizar enlaces de navegación
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+        }
+
+        // Event listeners para navegación
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = e.target.getAttribute('data-section');
+                showSection(section);
+            });
+        });
+
+        // Calculadora
+        let currentInput = '';
+        let operator = '';
+        let previousInput = '';
+        let shouldResetDisplay = false;
+
+        function updateDisplay(value) {
+            document.getElementById('display').value = value;
+        }
+
+        function appendNumber(number) {
+            if (shouldResetDisplay) {
+                currentInput = '';
+                shouldResetDisplay = false;
+            }
+            currentInput += number;
+            updateDisplay(currentInput);
+        }
+
+        function appendOperator(op) {
+            if (currentInput === '' && previousInput === '') return;
+            
+            if (previousInput !== '' && currentInput !== '' && operator !== '') {
+                calculate();
+            }
+            
+            operator = op;
+            previousInput = currentInput;
+            currentInput = '';
+        }
+
+        function calculate() {
+            if (previousInput === '' || currentInput === '' || operator === '') return;
+            
+            let result;
+            const prev = parseFloat(previousInput);
+            const current = parseFloat(currentInput);
+            
+            switch (operator) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    if (current === 0) {
+                        alert('Error: División por cero');
+                        return;
+                    }
+                    result = prev / current;
+                    break;
+                default:
+                    return;
+            }
+            
+            updateDisplay(result);
+            currentInput = result.toString();
+            operator = '';
+            previousInput = '';
+            shouldResetDisplay = true;
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            operator = '';
+            previousInput = '';
+            updateDisplay('');
+        }
+
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1);
+            updateDisplay(currentInput);
+        }
+
+        // Soporte para teclado en calculadora
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('calculator').closest('.content-section').classList.contains('active')) {
+                if (e.key >= '0' && e.key <= '9' || e.key === '.') {
+                    appendNumber(e.key);
+                } else if (['+', '-', '*', '/'].includes(e.key)) {
+                    appendOperator(e.key);
+                } else if (e.key === 'Enter' || e.key === '=') {
+                    e.preventDefault();
+                    calculate();
+                } else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
+                    clearDisplay();
+                } else if (e.key === 'Backspace') {
+                    deleteLast();
+                }
+            }
+        });
+
+        // Animación de entrada
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
